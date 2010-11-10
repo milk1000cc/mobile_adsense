@@ -31,7 +31,8 @@ module MobileAdsense
     }.join('&')
 
     begin
-      URI(ad_url).read
+      result = URI(ad_url).read
+      result.respond_to?(:html_safe) ? result.html_safe : result
     rescue StandardError, Timeout::Error
       ''
     end
@@ -39,7 +40,7 @@ module MobileAdsense
 
   def google_color(color, time)
     color_array = color.split(',')
-    color_array[time % color_array.size]
+    color_array[time.to_i % color_array.size]
   end
 
   def google_screen_res

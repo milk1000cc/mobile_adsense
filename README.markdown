@@ -3,8 +3,6 @@ MobileAdsense
 
 A rails plugin to show google adsense for mobile
 
-This plugin is tested with rails 2.3.10.
-
 
 Usage
 -----

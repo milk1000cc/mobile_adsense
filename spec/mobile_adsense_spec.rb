@@ -1,10 +1,17 @@
 require 'rubygems'
+gem 'rspec', '>= 2.0'
+require 'webmock'
 require 'action_controller'
-require 'action_controller/test_process'
-require 'webmock/rspec'
+if defined?(ActionDispatch)
+  require 'action_dispatch/testing/test_request'
+  TestRequest = ActionDispatch::TestRequest
+else
+  require 'action_controller/test_process'
+  TestRequest = ActionController::TestRequest
+end
 require File.expand_path('../lib/mobile_adsense', File.dirname(__FILE__))
 
-Spec::Runner.configure do |config|
+RSpec.configure do |config|
   config.include WebMock::API
   WebMock.disable_net_connect!
 end
@@ -14,8 +21,8 @@ describe 'MobileAdsense' do
   attr_accessor :request
 
   def reset_request
-    @request = ActionController::TestRequest.new
-    @request.env.merge! 'HTTP_HOST' => 'www.example.com', 'REQUEST_URI' => '/'
+    @request = TestRequest.new
+    @request.env.merge! 'HTTP_HOST' => 'www.example.com', 'HTTP_REFERER' => '/', 'REQUEST_URI' => '/'
   end
 
   before { reset_request }
@@ -33,7 +40,7 @@ describe 'MobileAdsense' do
           :markup => 'xhtml',
           :oe => 'utf8',
           :output => 'xhtml',
-          :ref => '',
+          :ref => '/',
           :url => 'http://www.example.com/',
           :useragent => @request.user_agent
         }.merge(query)).
