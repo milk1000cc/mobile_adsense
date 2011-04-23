@@ -20,7 +20,7 @@ module MobileAdsense
       :oe => 'utf8',
       :output => 'xhtml',
       :ref => (request.referer || ''),
-      :url => scheme + request.env['HTTP_HOST'] + request.env['REQUEST_URI'],
+      :url => scheme + request.host + request.fullpath,
       :useragent => user_agent
     }.merge(google_screen_res).merge(google_muid).merge(google_via_and_accept(user_agent)).merge(options)
 
